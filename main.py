@@ -20,12 +20,16 @@ def home_screen():
     return {"message": "Welcome to Home Screen"}
 
 
-# GET all students
 @app.get("/students")
-def get_students(course: str = None, db: Session = Depends(get_db)):
+def get_students(name: str = None, course: str = None, db: Session = Depends(get_db)):
     query = db.query(models.Student)
+
+    if name:
+        query = query.filter(models.Student.name.contains(name))  
+
     if course:
         query = query.filter(models.Student.course == course)
+
     return query.all()
 
 
